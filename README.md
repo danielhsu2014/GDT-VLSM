@@ -7,6 +7,11 @@
 ---
 
 ## 📖 Overview
+
+<p align="center">
+  <img src="figures/VLSM_overview.png" width="85%">
+</p>
+
 This work introduces **Vision-Language Simulation Models (VLSM)** that unify visual and textual understanding to generate **executable FlexScript** for industrial simulation systems.  
 Two model families are trained on the **GDT-120K** dataset:
 
@@ -17,6 +22,42 @@ Two model families are trained on the **GDT-120K** dataset:
 
 All configuration and tokenizer files are included for reproducibility.  
 Full checkpoints and adapter weights will be released **after the CVPR 2026 review period** to comply with double-blind submission policy.
+
+---
+
+## 🏗️ Dataset Construction
+
+<p align="center">
+  <img src="figures/dataset_pipeline.png" width="85%">
+</p>
+
+The **GDT-120K** dataset contains prompt–sketch–code triplets designed for industrial simulation.  
+Each sample includes:
+- A natural-language description of production logic  
+- A layout sketch describing workstation topology  
+- Corresponding executable FlexScript code  
+
+Dataset covers **13 industrial categories**, from manual assembly to fully automated AGV systems.  
+All parameters (e.g., `InterArrivalTime`, `ProcessTime`, `maxcontent`) follow realistic timing distributions ensuring FlexSim executability.
+
+---
+
+## 🧠 Architecture Overview
+
+<p align="center">
+  <img src="figures/VLSM_pipeline.png" width="80%">
+</p>
+
+The **Vision-Language Simulation Model (VLSM)** integrates:
+- **Visual Encoder:** CLIP / OpenCLIP (ViT-g/14)
+- **Connector:** Linear, MLP, or Q-Former for cross-modal fusion
+- **Language Backbone:** TinyLLaMA-1.1B or StarCoder2-7B
+
+Two optimized configurations:
+| Model | Vision Encoder | Connector | Backbone |
+|--------|----------------|-----------|-----------|
+| **VLSM-1.1B** | OpenCLIP | Linear Projection | TinyLLaMA-1.1B |
+| **VLSM-7B**   | OpenCLIP | Two-Layer MLP | StarCoder2-7B |
 
 ---
 
@@ -43,16 +84,14 @@ These files ensure full reproducibility without exposing model weights.
 ---
 
 ## 🐳 Docker Environments
-To reproduce environments:
 
-| Model | Dockerfile | Notes |
-|--------|-------------|-------|
-| **StarCoder2-7B (QLoRA)** | `dockerfiles/Dockerfile_StarCoder2` | CUDA 12.1 + PyTorch 2.2 + Transformers 4.45 + PEFT 0.15 |
-| **TinyLLaMA-1.1B (Full retrain)** | `dockerfiles/Dockerfile_TinyLlama` | CUDA 11.8 + PyTorch 2.1 + Transformers 4.40 |
+| Model | Dockerfile | PyTorch / CUDA | Notes |
+|---|---|---|---|
+| **StarCoder2-7B (QLoRA)** | `dockerfiles/Dockerfile_StarCoder2` | **PyTorch 2.3.0 / CUDA 11.8** | runtime + cuDNN 8 |
+| **TinyLLaMA-1.1B (Full retrain)** | `dockerfiles/Dockerfile_TinyLlama` | **PyTorch 2.1.0 / CUDA 11.8** | runtime + cuDNN 8 |
 
-Build example:
+**Build**
 ```bash
-# Build and run StarCoder2 environment
 docker build -t gdt-starcoder2 -f dockerfiles/Dockerfile_StarCoder2 .
 docker run --gpus all -it --rm gdt-starcoder2
 ```
