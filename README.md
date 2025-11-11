@@ -45,7 +45,7 @@ All parameters (e.g., `InterArrivalTime`, `ProcessTime`, `maxcontent`) follow re
 ## 🧠 Architecture Overview
 
 <p align="center">
-  <img src="figures/VLSM_pipeline.png" width="80%">
+  <img src="figures/VLSM_Pipeline.png" width="80%">
 </p>
 
 The **Vision-Language Simulation Model (VLSM)** integrates:
