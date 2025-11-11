@@ -6,7 +6,7 @@
 
 ---
 
-## 📖 Overview
+## Overview
 
 <p align="center">
   <img src="figures/VLSM_overview.png" width="85%">
@@ -25,7 +25,7 @@ Full checkpoints and adapter weights will be released **after the CVPR 2026 revi
 
 ---
 
-## 🏗️ Dataset Construction
+## Dataset Construction
 
 <p align="center">
   <img src="figures/dataset_pipeline.png" width="85%">
@@ -42,7 +42,7 @@ All parameters (e.g., `InterArrivalTime`, `ProcessTime`, `maxcontent`) follow re
 
 ---
 
-## 🧠 Architecture Overview
+## Architecture Overview
 
 <p align="center">
   <img src="figures/VLSM_Pipeline.png" width="80%">
@@ -61,7 +61,7 @@ Two optimized configurations:
 
 ---
 
-## ⚙️ Training Scripts
+## Training Scripts
 | Script | Description |
 |---------|-------------|
 | `starcoder2_7b_finetuning.py` | Fine-tuning StarCoder2-7B using QLoRA (PEFT). Supports 4-bit quantization and adapter training. |
@@ -71,7 +71,7 @@ Each script expects a standard Hugging Face model interface and can be launched 
 
 ---
 
-## 🧩 Configuration Files
+## Configuration Files
 All hyperparameters and tokenizer settings are preserved under `configs/`.
 
 | Directory | Description |
@@ -83,7 +83,7 @@ These files ensure full reproducibility without exposing model weights.
 
 ---
 
-## 🐳 Docker Environments
+## Docker Environments
 
 | Model | Dockerfile | PyTorch / CUDA | Notes |
 |---|---|---|---|
@@ -98,7 +98,7 @@ docker run --gpus all -it --rm gdt-starcoder2
 
 ---
 
-## 🔗 Model Weights (to be released after review)
+## Model Weights (to be released after review)
 Due to the CVPR 2026 double-blind policy and GitHub size constraints, model checkpoints are temporarily withheld.
 After the review process, fine-tuned weights and full retraining checkpoints will be made available via Google Drive.
 
@@ -113,10 +113,10 @@ A checkpoints_link.txt file will be added post-review with direct download links
 
 ---
 
-## 📜 License
+## License
 This repository is released under the MIT License (see LICENSE).
 
 ---
 
-## 📬 Contact
+## Contact
 Details will be added following the CVPR 2026 review phase.
