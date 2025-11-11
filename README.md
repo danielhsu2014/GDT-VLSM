@@ -1,4 +1,4 @@
-# Generative Digital Twins — Vision-Language Simulation Models for Executable Industrial Systems
+# Generative Digital Twins : Vision-Language Simulation Models for Executable Industrial Systems
 
 > **CVPR 2026 Submission (Anonymous)**  
 > Repository for the paper *“Generative Digital Twins: Vision-Language Simulation Models for Executable Industrial Systems.”*  
