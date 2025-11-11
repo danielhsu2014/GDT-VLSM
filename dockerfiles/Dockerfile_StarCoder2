@@ -1,0 +1,64 @@
+FROM pytorch/pytorch:2.3.0-cuda11.8-cudnn8-runtime
+
+# 避免 tzdata 安裝時進入互動模式
+ENV DEBIAN_FRONTEND=noninteractive
+
+# 安裝必要工具與依賴
+RUN apt-get update && apt-get install -y \
+    tzdata \
+    git \
+    wget \
+    curl \
+    nano \
+    unzip \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    util-linux \
+    tree \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# NVIDIA repository 與 key    
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb && \
+    dpkg -i cuda-keyring_1.1-1_all.deb && \
+    apt-get update
+
+# CUDA Toolkit
+RUN apt-get update && apt-get install -y \
+    cuda-toolkit-11-8 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# 設定 CUDA_HOME 環境變數
+ENV CUDA_HOME=/usr/local/cuda
+ENV PATH="$CUDA_HOME/bin:${PATH}"
+ENV LD_LIBRARY_PATH="$CUDA_HOME/lib64:${LD_LIBRARY_PATH}"
+
+# 安裝 Python 套件
+RUN pip install --upgrade pip && \
+    pip install \
+    torch torchvision torchaudio \
+    transformers==4.45.2 \
+    pandas openpyxl datasets scikit-learn \
+    sentencepiece>=0.2.0 \
+    protobuf matplotlib \
+    peft==0.15.2 \
+    accelerate>=0.33.0 \
+    bitsandbytes==0.45.2 \
+    deepspeed \
+    trl
+
+
+# 複製 Omniverse Farm 所需腳本與工具
+COPY thirdparty/omnicli /omnicli
+COPY scripts/docker/run.sh /run.sh
+RUN chmod +x /omnicli/omnicli && chmod +x /run.sh
+RUN sed -i 's/\r$//' /run.sh
+
+# 安裝必要工具（如果尚未有）
+RUN apt-get update && apt-get install -y \
+    util-linux \
+    tree \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /src /results && chmod -R 777 /src /results
