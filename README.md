@@ -2,7 +2,7 @@
 
 > **CVPR 2026 Submission (Anonymous)**  
 > Repository for the paper *“Generative Digital Twins: Vision-Language Simulation Models for Executable Industrial Systems.”*  
-> This repository contains training scripts, configuration files, and environment specifications for the fine-tuning and full-retraining experiments of **StarCoder2-7B** and **TinyLLaMA-1.1B** within the proposed VLSM framework.
+
 
 ---
 
