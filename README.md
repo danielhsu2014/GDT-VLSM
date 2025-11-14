@@ -40,6 +40,32 @@ Each sample includes:
 Dataset covers **13 industrial categories**, from manual assembly to fully automated AGV systems.  
 All parameters (e.g., `InterArrivalTime`, `ProcessTime`, `maxcontent`) follow realistic timing distributions ensuring FlexSim executability.
 
+We instantiate interarrival and service times using a small set of canonical stochastic distributions:
+
+**Arrival-time distributions for sources (Table 1 in the paper)**
+
+| Distribution | Typical use              | Parameterization      |
+|--------------|--------------------------|-----------------------|
+| Constant     | Fixed interarrival       | `constant(c)`         |
+| Exponential  | Memoryless inflow        | `exponential(λ⁻¹)`    |
+| Normal       | Natural variation        | `normal(μ, σ)`        |
+| Triangular   | Bounded with mode        | `triangular(a, m, b)` |
+| Uniform      | Bounded, unknown mode    | `uniform(a, b)`       |
+
+**Service-time distributions for machines (Table 2 in the paper)**
+
+| Distribution | Typical use                 | Parameterization        |
+|--------------|-----------------------------|-------------------------|
+| Constant     | Deterministic service       | `constant(c)`           |
+| Exponential  | Random short jobs           | `exponential(λ⁻¹)`      |
+| Normal       | Symmetric variability       | `normal(μ, σ)`          |
+| Triangular   | Bounded with mode           | `triangular(a, m, b)`   |
+| Uniform      | Bounded without mode        | `uniform(a, b)`         |
+| Lognormal    | Skewed processing times     | `lognormal(μₗ, σₗ)`     |
+| Weibull      | Reliability and wear        | `weibull(k, λ)`         |
+| Gamma        | Multi-stage effects         | `gamma(α, θ)`           |
+| Poisson      | Count-based servicing       | `poisson(ν)`            |
+
 ---
 
 ## Architecture Overview
