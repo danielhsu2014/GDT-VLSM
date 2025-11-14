@@ -59,13 +59,17 @@ Two optimized configurations:
 | **VLSM-1.1B** | OpenCLIP | Linear Projection | TinyLLaMA-1.1B |
 | **VLSM-7B**   | OpenCLIP | Two-Layer MLP | StarCoder2-7B |
 
+The corresponding training scripts are provided in `Code/LMM/` as `OpenCLIP_Linear_Projection_Tinyllama.py` (VLSM-1.1B) and `OpenCLIP_Two_MLP_StarCoder2.py` (VLSM-7B).
+
 ---
 
 ## Training Scripts
-| Script | Description |
-|---------|-------------|
-| `starcoder2_7b_finetuning.py` | Fine-tuning StarCoder2-7B using QLoRA (PEFT). Supports 4-bit quantization and adapter training. |
-| `tinyllama_fully_retrain.py` | End-to-end retraining of TinyLLaMA-1.1B on GDT-120K with full precision. |
+| Script | Location | Description |
+|--------|----------|-------------|
+| `starcoder2_7b_finetuning.py` | `Code/LLM/` | Fine-tuning StarCoder2-7B using QLoRA (PEFT). Supports 4-bit quantization and adapter training. |
+| `tinyllama_fully_retrain.py` | `Code/LLM/` | End-to-end retraining of TinyLLaMA-1.1B on GDT-120K with full precision. |
+| `OpenCLIP_Linear_Projection_Tinyllama.py` | `Code/LMM/` | Trains VLSM-1.1B by attaching a linear projection connector on top of OpenCLIP and TinyLLaMA-1.1B. |
+| `OpenCLIP_Two_MLP_StarCoder2.py` | `Code/LMM/` | Trains VLSM-7B with a two-layer MLP connector on top of OpenCLIP and StarCoder2-7B. |
 
 Each script expects a standard Hugging Face model interface and can be launched with `torchrun` or `accelerate`.
 
