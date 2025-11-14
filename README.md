@@ -63,6 +63,56 @@ The corresponding training scripts are provided in `Code/LMM/` as `OpenCLIP_Line
 
 ---
 
+## LLM Baselines on FlexScript
+We evaluate seven open-source LLM backbones on the GDT-120K text-to-FlexScript task.  
+Scores are reported on the held-out test set (best epoch per model).
+
+| Model             | Best SVR | Best PMR | Best ESR | Best BLEU-4 |
+|-------------------|---------:|---------:|---------:|------------:|
+| Gemma3-270M       | 0.9328   | 0.9219   | 0.8040   | 0.9318      |
+| TinyLLaMA-1.1B    | 0.9444   | 0.9424   | 0.8380   | 0.9467      |
+| Mistral-7B        | 0.9107   | 0.6108   | 0.6860   | 0.6925      |
+| LLaMA2-7B         | 0.7104   | 0.0513   | 0.4480   | 0.3660      |
+| CodeLLaMA-7B      | 0.5127   | 0.1654   | 0.4660   | 0.3874      |
+| **StarCoder2-7B** | **0.9905** | **0.9886** | **0.8620** | **0.9811** |
+| LLaMA3-8B         | 0.2447   | 0.0466   | 0.1920   | 0.1539      |
+
+---
+
+## Multimodal Ablation for VLSM
+
+**TinyLLaMA-1.1B with vision encoders and connector modules (Table 4 in the paper).  
+The first row is the text-only baseline.**
+
+| Vision Encoder                 | Connector                  | SVR    | PMR    | ESR    | BLEU-4 |
+|--------------------------------|----------------------------|-------:|-------:|-------:|-------:|
+| TinyLLaMA-1.1B (LLM-only)      | –                          | 0.9444 | 0.9424 | 0.8380 | 0.9467 |
+| CLIP                           | Linear Projection          | 0.8911 | 0.9284 | 0.8020 | 0.9164 |
+| CLIP                           | Perceiver-style Resampler  | 0.8607 | 0.9311 | 0.8080 | 0.9205 |
+| CLIP                           | Q-Former                   | 0.8535 | 0.9311 | 0.7960 | 0.9150 |
+| CLIP                           | Two-Layer MLP              | 0.9059 | 0.9229 | 0.8300 | 0.9238 |
+| OpenCLIP                       | Linear Projection          | 0.9408 | 0.9505 | 0.8820 | 0.9482 |
+| OpenCLIP                       | Perceiver-style Resampler  | 0.9144 | 0.9330 | 0.8040 | 0.9204 |
+| OpenCLIP                       | Q-Former                   | 0.9314 | 0.9422 | 0.8500 | 0.9265 |
+| OpenCLIP                       | Two-Layer MLP              | 0.9243 | 0.9403 | 0.8220 | 0.9222 |
+
+**StarCoder2-7B with vision encoders and connector modules (Table 5 in the paper).  
+The first row is the text-only baseline.**
+
+| Vision Encoder                 | Connector                  | SVR    | PMR    | ESR    | BLEU-4 |
+|--------------------------------|----------------------------|-------:|-------:|-------:|-------:|
+| StarCoder2-7B (LLM-only)       | –                          | 0.9905 | 0.9886 | 0.8620 | 0.9811 |
+| CLIP                           | Linear Projection          | 0.9958 | 0.9930 | 0.8640 | 0.9874 |
+| CLIP                           | Perceiver-style Resampler  | 0.9903 | 0.9928 | 0.8480 | 0.9843 |
+| CLIP                           | Q-Former                   | 0.9825 | 0.9876 | 0.8380 | 0.9724 |
+| CLIP                           | Two-Layer MLP              | 0.9861 | 0.9932 | 0.8420 | 0.9829 |
+| OpenCLIP                       | Linear Projection          | 0.9958 | 0.9857 | 0.8720 | 0.9866 |
+| OpenCLIP                       | Perceiver-style Resampler  | 0.9857 | 0.9849 | 0.8600 | 0.9862 |
+| OpenCLIP                       | Q-Former                   | 0.9948 | 0.9913 | 0.8660 | 0.9868 |
+| **OpenCLIP**                   | **Two-Layer MLP**          | **0.9990** | **0.9922** | **0.8740** | **0.9886** |
+
+---
+
 ## Training Scripts
 | Script | Location | Description |
 |--------|----------|-------------|
