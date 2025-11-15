@@ -7,7 +7,7 @@
 ---
 ## Abstract
 
-We propose a Vision-Language Simulation Model (VLSM) that unifies visual and textual understanding to synthesize executable FlexScript from layout sketches and natural-language prompts, enabling cross-modal reasoning for industrial simulation systems. To support this new paradigm, the study constructs the first large-scale dataset for generative digital twins, comprising over 120,000 prompt–sketch–code triplets that enable multimodal learning between textual descriptions, spatial structures, and simulation logic. In parallel, three novel evaluation metrics, Structural Validity Rate (SVR), Parameter Match Rate (PMR), and Execution Success Rate (ESR), are proposed specifically for this task to comprehensively evaluate structural integrity, parameter fidelity, and simulator executability. Through systematic ablation across vision encoders, connectors, and code-pretrained language backbones, the proposed models achieve near-perfect structural accuracy and high execution robustness. This work establishes a foundation for generative digital twins that integrate visual reasoning and language understanding into executable industrial simulation systems.
+We propose a **Vision-Language Simulation Model (VLSM)** that unifies visual and textual understanding to synthesize executable FlexScript from layout sketches and natural-language prompts, enabling cross-modal reasoning for industrial simulation systems. To support this new paradigm, the study constructs the first large-scale dataset for generative digital twins, comprising over 120,000 prompt–sketch–code triplets that enable multimodal learning between textual descriptions, spatial structures, and simulation logic. In parallel, three novel evaluation metrics, Structural Validity Rate (SVR), Parameter Match Rate (PMR), and Execution Success Rate (ESR), are proposed specifically for this task to comprehensively evaluate structural integrity, parameter fidelity, and simulator executability. Through systematic ablation across vision encoders, connectors, and code-pretrained language backbones, the proposed models achieve near-perfect structural accuracy and high execution robustness. This work establishes a foundation for generative digital twins that integrate visual reasoning and language understanding into executable industrial simulation systems.
 
 ---
 
@@ -17,7 +17,7 @@ We propose a Vision-Language Simulation Model (VLSM) that unifies visual and tex
   <img src="figures/VLSM_overview.png" width="85%">
 </p>
 
-This work introduces **Vision-Language Simulation Models (VLSM)** that unify visual and textual understanding to generate **executable FlexScript** for industrial simulation systems.  
+This work introduces **Vision-Language Simulation Models (VLSM)** that unify visual and textual understanding to generate executable FlexScript for industrial simulation systems.  
 Two model families are trained on the **GDT-120K** dataset:
 
 | Model | Type | Purpose |
