@@ -1,0 +1,23 @@
+# Core Deep Learning
+torch>=2.1.0
+torchvision
+torchaudio
+
+# Hugging Face Ecosystem (Based on StarCoder2 config)
+transformers==4.45.2
+accelerate>=0.33.0
+peft==0.15.2
+bitsandbytes==0.45.2
+datasets
+trl
+
+# Distributed Training
+deepspeed
+
+# Data Processing & Visualization
+pandas
+openpyxl
+scikit-learn
+matplotlib
+sentencepiece>=0.2.0
+protobuf
