@@ -112,7 +112,7 @@ The full **GDT-120K** dataset is currently withheld to maintain anonymity during
 
 The **Vision-Language Simulation Model (VLSM)** integrates:
 - **Visual Encoder:** CLIP / OpenCLIP (ViT-g/14)
-- **Connector:** Linear, perceiver,  Q-Former, or MLP for cross-modal fusion
+- **Connector:** Linear, Perceiver, Q-Former, or MLP for cross-modal fusion
 - **Language Backbone:** TinyLLaMA-1.1B or StarCoder2-7B
 
 Two optimized configurations:
