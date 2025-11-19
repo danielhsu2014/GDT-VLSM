@@ -29,6 +29,34 @@ All configuration and tokenizer files are included for reproducibility.
 Full checkpoints and adapter weights will be released **after the CVPR 2026 review period** to comply with double-blind submission policy.
 
 ---
+## Repository Structure
+
+The directory structure of this repository is organized as follows:
+
+```text
+GDT-VLSM/
+├── Code/
+│   ├── LLM/
+│   │   ├── starcoder2_7b_finetuning.py    # QLoRA fine-tuning script for StarCoder2
+│   │   └── tinyllama_fully_retrain.py     # Full parameter retraining script for TinyLLaMA
+│   └── LMM/
+│       ├── OpenCLIP_Linear_Projection_Tinyllama.py  # VLSM-1.1B training (OpenCLIP + Linear + TinyLLaMA)
+│       └── OpenCLIP_Two_MLP_StarCoder2.py           # VLSM-7B training (OpenCLIP + MLP + StarCoder2)
+├── configs/
+│   ├── StarCoder2/        # Adapter configs, tokenizer, and LoRA metadata
+│   └── TinyLlama-1.1b/    # Scheduler state and generation configs for retraining
+├── checkpoints/           # Model weights & Adapters (Hosted externally, see Model Weights section)
+├── data/                  # GDT-120K dataset (Hosted externally, see Dataset section)
+├── dockerfiles/
+│   ├── Dockerfile_StarCoder2    # Docker environment for StarCoder2 (CUDA 11.8)
+│   └── Dockerfile_TinyLlama     # Docker environment for TinyLLaMA (CUDA 11.8)
+├── figures/               # Images used in the README
+├── .gitignore             # Git ignore rules
+├── LICENSE                # MIT License
+├── README.md              # Project documentation
+└── requirements.txt       # Python dependencies for reproduction
+```
+---
 
 ## Dataset Construction
 
@@ -70,6 +98,9 @@ We instantiate interarrival and service times using a small set of canonical sto
 | Weibull      | Reliability and wear        | `weibull(k, λ)`         |
 | Gamma        | Multi-stage effects         | `gamma(α, θ)`           |
 | Poisson      | Count-based servicing       | `poisson(ν)`            |
+
+
+The full **GDT-120K** dataset is currently withheld to maintain anonymity during the CVPR 2026 review process. It will be publicly released alongside the model checkpoints upon the conclusion of the review period.
 
 ---
 
