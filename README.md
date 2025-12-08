@@ -1,238 +1,262 @@
 # Generative Digital Twins: Vision-Language Simulation Models for Executable Industrial Systems
 
 > **CVPR 2026 Submission (Anonymous)**  
-> Repository for the paper *“Generative Digital Twins: Vision-Language Simulation Models for Executable Industrial Systems.”*  
+> This repository contains the training code, configuration files, and Docker
+> environments for the paper *“Generative Digital Twins: Vision-Language
+> Simulation Models for Executable Industrial Systems.”*
 
-
----
-## Abstract
-
-We propose a **Vision-Language Simulation Model (VLSM)** that unifies visual and textual understanding to synthesize executable FlexScript from layout sketches and natural-language prompts, enabling cross-modal reasoning for industrial simulation systems. To support this new paradigm, the study constructs the first large-scale dataset for generative digital twins, comprising over 120,000 prompt–sketch–code triplets that enable multimodal learning between textual descriptions, spatial structures, and simulation logic. In parallel, three novel evaluation metrics, Structural Validity Rate (SVR), Parameter Match Rate (PMR), and Execution Success Rate (ESR), are proposed specifically for this task to comprehensively evaluate structural integrity, parameter fidelity, and simulator executability. Through systematic ablation across vision encoders, connectors, and code-pretrained language backbones, the proposed models achieve near-perfect structural accuracy and high execution robustness. This work establishes a foundation for generative digital twins that integrate visual reasoning and language understanding into executable industrial simulation systems.
-
----
-
-## Overview
-
-<p align="center">
-  <img src="figures/VLSM_overview.png" width="85%">
-</p>
-
-This work introduces **Vision-Language Simulation Models (VLSM)** that unify visual and textual understanding to generate executable FlexScript for industrial simulation systems.  
-Two model families are trained on the **GDT-120K** dataset:
-
-| Model | Type | Purpose |
-|--------|------|----------|
-| **StarCoder2-7B (QLoRA fine-tuned)** | 4-bit quantized fine-tune | Lightweight inference with code-specialized backbone |
-| **TinyLLaMA-1.1B (fully retrained)** | Full-precision retraining | Compact model for domain specialization |
-
-All configuration and tokenizer files are included for reproducibility.  
-Full checkpoints and adapter weights will be released **after the CVPR 2026 review period** to comply with double-blind submission policy.
+The goal of this codebase is to reproduce the Vision-Language Simulation Models
+(VLSM) used for generating executable FlexScript from text and layout sketches.
 
 ---
+
 ## Repository Structure
-
-The directory structure of this repository is organized as follows:
 
 ```text
 GDT-VLSM/
 ├── Code/
 │   ├── LLM/
-│   │   ├── starcoder2_7b_finetuning.py    # QLoRA fine-tuning script for StarCoder2
-│   │   └── tinyllama_fully_retrain.py     # Full parameter retraining script for TinyLLaMA
+│   │   ├── starcoder2_7b_finetuning.py          # QLoRA fine-tuning for StarCoder2-7B
+│   │   └── tinylama_fully_retrain.py            # Full-parameter retraining for TinyLLaMA-1.1B
 │   └── LMM/
-│       ├── OpenCLIP_Linear_Projection_Tinyllama.py  # VLSM-1.1B training (OpenCLIP + Linear + TinyLLaMA)
-│       └── OpenCLIP_Two_MLP_StarCoder2.py           # VLSM-7B training (OpenCLIP + MLP + StarCoder2)
+│       ├── OpenCLIP_Linear_Projection_Tinyllama.py   # VLSM-1.1B (OpenCLIP + Linear + TinyLLaMA)
+│       └── OpenCLIP_Two_MLP_StarCoder2.py            # VLSM-7B   (OpenCLIP + 2-layer MLP + StarCoder2)
 ├── configs/
-│   ├── StarCoder2/        # Adapter configs, tokenizer, and LoRA metadata
-│   └── TinyLlama-1.1b/    # Scheduler state and generation configs for retraining
-├── checkpoints/           # Model weights & Adapters (Hosted externally, see Model Weights section)
-├── data/                  # GDT-120K dataset (Hosted externally, see Dataset section)
+│   ├── StarCoder2/          # LoRA adapter config + tokenizer for StarCoder2-7B
+│   └── TinyLlama-1.1b/      # TinyLLaMA-1.1B config + tokenizer
+├── dataset/                 # Dataset placeholders (see dataset/README.md)
 ├── dockerfiles/
-│   ├── Dockerfile_StarCoder2    # Docker environment for StarCoder2 (CUDA 11.8)
-│   └── Dockerfile_TinyLlama     # Docker environment for TinyLLaMA (CUDA 11.8)
-├── figures/               # Images used in the README
-├── .gitignore             # Git ignore rules
-├── LICENSE                # MIT License
-├── README.md              # Project documentation
-└── requirements.txt       # Python dependencies for reproduction
+│   ├── Dockerfile_StarCoder2    # CUDA 11.8 environment for StarCoder2-7B
+│   └── Dockerfile_TinyLlama     # CUDA 11.8 environment for TinyLLaMA-1.1B
+├── .gitignore
+├── LICENSE
+├── README.md
+└── requirements.txt         # Python dependencies
 ```
----
-
-## Dataset Construction
-
-<p align="center">
-  <img src="figures/dataset_pipeline.png" width="85%">
-</p>
-
-The **GDT-120K** dataset contains prompt–sketch–code triplets designed for industrial simulation.  
-Each sample includes:
-- A natural-language description of production logic  
-- A layout sketch describing workstation topology  
-- Corresponding executable FlexScript code  
-
-Dataset covers **13 industrial categories**, from manual assembly to fully automated AGV systems.  
-All parameters (e.g., `InterArrivalTime`, `ProcessTime`, `maxcontent`) follow realistic timing distributions ensuring FlexSim executability.
-
-We instantiate interarrival and service times using a small set of canonical stochastic distributions:
-
-**Arrival-time distributions for sources (Table 1 in the paper)**
-
-| Distribution | Typical use              | Parameterization      |
-|--------------|--------------------------|-----------------------|
-| Constant     | Fixed interarrival       | `constant(c)`         |
-| Exponential  | Memoryless inflow        | `exponential(λ⁻¹)`    |
-| Normal       | Natural variation        | `normal(μ, σ)`        |
-| Triangular   | Bounded with mode        | `triangular(a, m, b)` |
-| Uniform      | Bounded, unknown mode    | `uniform(a, b)`       |
-
-**Service-time distributions for machines (Table 2 in the paper)**
-
-| Distribution | Typical use                 | Parameterization        |
-|--------------|-----------------------------|-------------------------|
-| Constant     | Deterministic service       | `constant(c)`           |
-| Exponential  | Random short jobs           | `exponential(λ⁻¹)`      |
-| Normal       | Symmetric variability       | `normal(μ, σ)`          |
-| Triangular   | Bounded with mode           | `triangular(a, m, b)`   |
-| Uniform      | Bounded without mode        | `uniform(a, b)`         |
-| Lognormal    | Skewed processing times     | `lognormal(μₗ, σₗ)`     |
-| Weibull      | Reliability and wear        | `weibull(k, λ)`         |
-| Gamma        | Multi-stage effects         | `gamma(α, θ)`           |
-| Poisson      | Count-based servicing       | `poisson(ν)`            |
-
-
-The full **GDT-120K** dataset is currently withheld to maintain anonymity during the CVPR 2026 review process. It will be publicly released alongside the model checkpoints upon the conclusion of the review period.
 
 ---
 
-## Architecture Overview
+## Dependencies & Setup
 
-<p align="center">
-  <img src="figures/VLSM_Pipeline.png" width="80%">
-</p>
+Install Python dependencies:
 
-The **Vision-Language Simulation Model (VLSM)** integrates:
-- **Visual Encoder:** CLIP / OpenCLIP (ViT-g/14)
-- **Connector:** Linear, Perceiver, Q-Former, or MLP for cross-modal fusion
-- **Language Backbone:** TinyLLaMA-1.1B or StarCoder2-7B
+```bash
+pip install -r requirements.txt
+```
 
-Two optimized configurations:
-| Model | Vision Encoder | Connector | Backbone |
-|--------|----------------|-----------|-----------|
-| **VLSM-1.1B** | OpenCLIP | Linear Projection | TinyLLaMA-1.1B |
-| **VLSM-7B**   | OpenCLIP | Two-Layer MLP | StarCoder2-7B |
+(Optional but recommended) log in to Hugging Face Hub to avoid anonymous
+rate limiting:
 
-The corresponding training scripts are provided in `Code/LMM/` as `OpenCLIP_Linear_Projection_Tinyllama.py` (VLSM-1.1B) and `OpenCLIP_Two_MLP_StarCoder2.py` (VLSM-7B).
+```bash
+huggingface-cli login
+```
 
 ---
 
-## LLM Baselines on FlexScript
-We evaluate seven open-source LLM backbones on the GDT-120K text-to-FlexScript task.  
-Scores are reported on the held-out test set (best epoch per model).
+## Datasets
 
-| Model             | Best SVR | Best PMR | Best ESR | Best BLEU-4 |
-|-------------------|---------:|---------:|---------:|------------:|
-| Gemma3-270M       | 0.9328   | 0.9219   | 0.8040   | 0.9318      |
-| TinyLLaMA-1.1B    | 0.9444   | 0.9424   | 0.8380   | 0.9467      |
-| Mistral-7B        | 0.9107   | 0.6108   | 0.6860   | 0.6925      |
-| LLaMA2-7B         | 0.7104   | 0.0513   | 0.4480   | 0.3660      |
-| CodeLLaMA-7B      | 0.5127   | 0.1654   | 0.4660   | 0.3874      |
-| **StarCoder2-7B** | **0.9905** | **0.9886** | **0.8620** | **0.9811** |
-| LLaMA3-8B         | 0.2447   | 0.0466   | 0.1920   | 0.1539      |
+Raw data is **not included** in this repository due to size and double-blind
+constraints.
 
----
+After downloading, place the files under `dataset/` as:
 
-## Multimodal Ablation for VLSM
+```text
+dataset/
+  train.xlsx
+  val.xlsx
+  train.jsonl
+  images/        # all images referenced in train.jsonl
+```
 
-**TinyLLaMA-1.1B with vision encoders and connector modules (Table 4 in the paper).  
-The first row is the text-only baseline.**
-
-| Vision Encoder                 | Connector                  | SVR    | PMR    | ESR    | BLEU-4 |
-|--------------------------------|----------------------------|-------:|-------:|-------:|-------:|
-| TinyLLaMA-1.1B (LLM-only)      | –                          | 0.9444 | 0.9424 | 0.8380 | 0.9467 |
-| CLIP                           | Linear Projection          | 0.8911 | 0.9284 | 0.8020 | 0.9164 |
-| CLIP                           | Perceiver-style Resampler  | 0.8607 | 0.9311 | 0.8080 | 0.9205 |
-| CLIP                           | Q-Former                   | 0.8535 | 0.9311 | 0.7960 | 0.9150 |
-| CLIP                           | Two-Layer MLP              | 0.9059 | 0.9229 | 0.8300 | 0.9238 |
-| OpenCLIP                       | Linear Projection          | 0.9408 | 0.9505 | 0.8820 | 0.9482 |
-| OpenCLIP                       | Perceiver-style Resampler  | 0.9144 | 0.9330 | 0.8040 | 0.9204 |
-| OpenCLIP                       | Q-Former                   | 0.9314 | 0.9422 | 0.8500 | 0.9265 |
-| OpenCLIP                       | Two-Layer MLP              | 0.9243 | 0.9403 | 0.8220 | 0.9222 |
-
-**StarCoder2-7B with vision encoders and connector modules (Table 5 in the paper).  
-The first row is the text-only baseline.**
-
-| Vision Encoder                 | Connector                  | SVR    | PMR    | ESR    | BLEU-4 |
-|--------------------------------|----------------------------|-------:|-------:|-------:|-------:|
-| StarCoder2-7B (LLM-only)       | –                          | 0.9905 | 0.9886 | 0.8620 | 0.9811 |
-| CLIP                           | Linear Projection          | 0.9958 | 0.9930 | 0.8640 | 0.9874 |
-| CLIP                           | Perceiver-style Resampler  | 0.9903 | 0.9928 | 0.8480 | 0.9843 |
-| CLIP                           | Q-Former                   | 0.9825 | 0.9876 | 0.8380 | 0.9724 |
-| CLIP                           | Two-Layer MLP              | 0.9861 | 0.9932 | 0.8420 | 0.9829 |
-| OpenCLIP                       | Linear Projection          | 0.9958 | 0.9857 | 0.8720 | 0.9866 |
-| OpenCLIP                       | Perceiver-style Resampler  | 0.9857 | 0.9849 | 0.8600 | 0.9862 |
-| OpenCLIP                       | Q-Former                   | 0.9948 | 0.9913 | 0.8660 | 0.9868 |
-| **OpenCLIP**                   | **Two-Layer MLP**          | **0.9990** | **0.9922** | **0.8740** | **0.9886** |
+A short summary is given in `dataset/README.md`.
 
 ---
 
 ## Training Scripts
-| Script | Location | Description |
-|--------|----------|-------------|
-| `starcoder2_7b_finetuning.py` | `Code/LLM/` | Fine-tuning StarCoder2-7B using QLoRA (PEFT). Supports 4-bit quantization and adapter training. |
-| `tinyllama_fully_retrain.py` | `Code/LLM/` | End-to-end retraining of TinyLLaMA-1.1B on GDT-120K with full precision. |
-| `OpenCLIP_Linear_Projection_Tinyllama.py` | `Code/LMM/` | Trains VLSM-1.1B by attaching a linear projection connector on top of OpenCLIP and TinyLLaMA-1.1B. |
-| `OpenCLIP_Two_MLP_StarCoder2.py` | `Code/LMM/` | Trains VLSM-7B with a two-layer MLP connector on top of OpenCLIP and StarCoder2-7B. |
 
-Each script expects a standard Hugging Face model interface and can be launched with `torchrun` or `accelerate`.
+| Script | Path | Description |
+|--------|------|-------------|
+| `starcoder2_7b_finetuning.py` | `Code/LLM/` | QLoRA fine-tuning of **StarCoder2-7B** on text-only GDT-120K. Uses 4-bit quantization and PEFT adapters. |
+| `tinylama_fully_retrain.py` | `Code/LLM/` | Full-parameter retraining of **TinyLLaMA-1.1B** on text-only GDT-120K. |
+| `OpenCLIP_Linear_Projection_Tinyllama.py` | `Code/LMM/` | Multimodal training of **VLSM-1.1B** (OpenCLIP vision encoder + linear projection connector + TinyLLaMA-1.1B). |
+| `OpenCLIP_Two_MLP_StarCoder2.py` | `Code/LMM/` | Multimodal training of **VLSM-7B** (OpenCLIP vision encoder + two-layer MLP connector + StarCoder2-7B + LoRA). |
+
+All scripts follow the standard Hugging Face `from_pretrained` interface and
+can be launched via `python`, `torchrun`, or `accelerate` depending on your
+hardware.
+
+---
+
+## 1. Text-only Fine-tuning
+
+### StarCoder2-7B (QLoRA)
+
+- Base model: `bigcode/starcoder2-7b` (downloaded automatically from HF).
+- Required files:
+  - `dataset/train.xlsx`
+  - `dataset/val.xlsx`
+
+Run:
+
+```bash
+python Code/LLM/starcoder2_7b_finetuning.py
+```
+
+This script:
+
+- Loads `bigcode/starcoder2-7b` in 4-bit using `BitsAndBytesConfig`.
+- Applies QLoRA to a subset of attention / MLP layers.
+- Writes checkpoints under `results/` (created automatically, Git-ignored).
+
+### TinyLLaMA-1.1B (full retrain)
+
+- Base model: `mesolitica/tinyllama-1.1b-4096-fpf` (downloaded from HF).
+- Required files:
+  - `dataset/train.xlsx`
+  - `dataset/val.xlsx`
+
+Run:
+
+```bash
+python Code/LLM/tinylama_fully_retrain.py
+```
+
+This script:
+
+- Loads the TinyLLaMA config and initializes a fresh `LlamaForCausalLM`.
+- Trains all parameters on the FlexScript corpus.
+- Writes checkpoints under `results/` (created automatically, Git-ignored).
+
+---
+
+## 2. Multimodal Training (VLSM)
+
+### VLSM-1.1B (OpenCLIP + TinyLLaMA)
+
+Script: `Code/LMM/OpenCLIP_Linear_Projection_Tinyllama.py`
+
+- Vision encoder: `laion/CLIP-ViT-H-14-laion2B-s32B-b79K`
+- LLM path: `configs/TinyLlama-1.1b`
+  - Expects a fine-tuned TinyLLaMA checkpoint to be placed here as
+    `model.safetensors` after download (see **Model Weights** section).
+- Required files:
+  - `dataset/train.jsonl`
+  - `dataset/images/`
+
+Run:
+
+```bash
+python Code/LMM/OpenCLIP_Linear_Projection_Tinyllama.py
+```
+
+This script:
+
+- Encodes images with OpenCLIP.
+- Projects visual tokens into the TinyLLaMA hidden space via a linear layer.
+- Concatenates visual embeddings and token embeddings along the sequence
+  dimension.
+- Optimizes the vision encoder + projection connector, keeping TinyLLaMA
+  frozen.
+- Saves the best model to `OpenCLIP_Linear_Projection_Tinyllama/`
+  (Git-ignored).
+
+### VLSM-7B (OpenCLIP + StarCoder2 + LoRA)
+
+Script: `Code/LMM/OpenCLIP_Two_MLP_StarCoder2.py`
+
+- Vision encoder: `laion/CLIP-ViT-H-14-laion2B-s32B-b79K`
+- Base LLM: `bigcode/starcoder2-7b`
+- LoRA adapter path: `configs/StarCoder2`
+  - Expects `adapter_model.safetensors` after download (see **Model Weights**).
+- Required files:
+  - `dataset/train.jsonl`
+  - `dataset/images/`
+
+Run:
+
+```bash
+python Code/LMM/OpenCLIP_Two_MLP_StarCoder2.py
+```
+
+This script:
+
+- Loads StarCoder2-7B in 4-bit and attaches a LoRA adapter from
+  `configs/StarCoder2/`.
+- Encodes images with OpenCLIP.
+- Uses a two-layer MLP connector to map visual features into the LLM space.
+- Concatenates visual and textual embeddings and trains only the vision
+  encoder + connector, keeping the LoRA-augmented StarCoder2 frozen.
+- Saves the best model to `OpenCLIP_Two_MLP_StarCoder2/`
+  (Git-ignored).
 
 ---
 
 ## Configuration Files
-All hyperparameters and tokenizer settings are preserved under `configs/`.
 
-| Directory | Description |
-|------------|-------------|
-| `configs/StarCoder2/` | Adapter configuration, tokenizer, and LoRA metadata. |
-| `configs/TinyLlama-1.1b/` | Full retraining setup including scheduler state and generation configuration. |
+All hyperparameters and tokenizer settings needed for loading the fine-tuned
+models are stored under `configs/`.
 
-These files ensure full reproducibility without exposing model weights.
+| Directory | Contents |
+|----------|----------|
+| `configs/StarCoder2/` | `adapter_config.json`, tokenizer files, LoRA metadata, training arguments, trainer state. Expects `adapter_model.safetensors` to be placed here after downloading the fine-tuned adapter. |
+| `configs/TinyLlama-1.1b/` | `config.json`, `generation_config.json`, tokenizer files, scheduler state, training arguments, trainer state. Expects `model.safetensors` to be placed here after downloading the fine-tuned TinyLLaMA checkpoint. |
+
+Optional training state files that may appear in your local runs but are
+**not required** for inference include:
+
+- `optimizer.pt`
+- `scheduler.pt`
+- `rng_state_0.pth` … `rng_state_7.pth`
+
+These are only needed if you want to resume training with identical optimizer
+and RNG state.
 
 ---
 
 ## Docker Environments
 
-| Model | Dockerfile | PyTorch / CUDA | Notes |
-|---|---|---|---|
-| **StarCoder2-7B (QLoRA)** | `dockerfiles/Dockerfile_StarCoder2` | **PyTorch 2.3.0 / CUDA 11.8** | runtime + cuDNN 8 |
-| **TinyLLaMA-1.1B (Full retrain)** | `dockerfiles/Dockerfile_TinyLlama` | **PyTorch 2.1.0 / CUDA 11.8** | runtime + cuDNN 8 |
+Two Dockerfiles are provided to reproduce the training environments:
 
-**Build**
+| Model | Dockerfile | PyTorch / CUDA |
+|-------|-----------|----------------|
+| StarCoder2-7B (QLoRA) | `dockerfiles/Dockerfile_StarCoder2` | PyTorch 2.3.0 / CUDA 11.8 |
+| TinyLLaMA-1.1B (full retrain) | `dockerfiles/Dockerfile_TinyLlama` | PyTorch 2.1.0 / CUDA 11.8 |
+
+Example build and run:
+
 ```bash
 docker build -t gdt-starcoder2 -f dockerfiles/Dockerfile_StarCoder2 .
 docker run --gpus all -it --rm gdt-starcoder2
 ```
 
+You can adapt the same pattern to build and run the TinyLLaMA environment.
+
 ---
 
 ## Model Weights (to be released after review)
-Due to the CVPR 2026 double-blind policy and GitHub size constraints, model checkpoints are temporarily withheld.
-After the review process, fine-tuned weights and full retraining checkpoints will be made available via Google Drive.
 
-Planned uploads:
+To comply with the CVPR 2026 double-blind policy, model weights are **not**
+included in this repository.
 
-|Model | Files	| Hosting
-|--------|-------------|-------|
-|StarCoder2-7B (QLoRA fine-tuned, epoch 6 best)	| adapter_model.safetensors, optimizer.pt, trainer_state.json	| Google Drive (to be added)
-|TinyLLaMA-1.1B (fully retrained, best checkpoint)	| model.safetensors, optimizer.pt, trainer_state.json	| Google Drive (to be added)
+After the review phase, we plan to release:
 
-A checkpoints_link.txt file will be added post-review with direct download links.
+| Model | Target path in this repo | Required files |
+|-------|--------------------------|----------------|
+| StarCoder2-7B (QLoRA fine-tuned) | `configs/StarCoder2/` | `adapter_model.safetensors` (+ optional optimizer / trainer state) |
+| TinyLLaMA-1.1B (fully retrained) | `configs/TinyLlama-1.1b/` | `model.safetensors` (+ optional optimizer / trainer state) |
+
+A `checkpoints_link.txt` file will be added with direct download links once
+the review process is complete.
 
 ---
 
 ## License
-This repository is released under the MIT License (see LICENSE).
+
+This repository is released under the MIT License (see `LICENSE`).
 
 ---
 
 ## Contact
-Details will be added following the CVPR 2026 review phase.
+
+Contact information will be added after the CVPR 2026 review period to
+preserve anonymity.
