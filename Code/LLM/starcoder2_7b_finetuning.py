@@ -46,8 +46,8 @@ class LossRecorderCallback(TrainerCallback):
             self.train_losses.append(logs["loss"])
 
 # ======== Dataset ========
-train_path = "/src/dataset/train.xlsx"
-val_path = "/src/dataset/val.xlsx"
+train_path = "dataset/train.xlsx"
+val_path = "dataset/val.xlsx"
 
 train_df = pd.read_excel(train_path)
 val_df = pd.read_excel(val_path)
@@ -55,7 +55,7 @@ val_df = pd.read_excel(val_path)
 train_dataset = Dataset.from_pandas(train_df)
 eval_dataset = Dataset.from_pandas(val_df)
 
-model_path = "/src"
+model_path = "bigcode/starcoder2-7b"
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 tokenizer.pad_token = tokenizer.eos_token
 
@@ -104,7 +104,7 @@ lora_cfg = LoraConfig(
 model = get_peft_model(model, lora_cfg)
 
 # ======== Training ========
-output_dir = "/results"
+output_dir = "results"
 os.makedirs(output_dir, exist_ok=True)
 
 training_args = TrainingArguments(
