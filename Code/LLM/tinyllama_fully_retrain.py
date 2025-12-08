@@ -54,14 +54,14 @@ def compute_metrics(eval_pred: EvalPrediction):
     return {"eval_accuracy": accuracy.item()}
 
 # ===== Data Processing =====
-train_df = pd.read_excel("/src/dataset/train.xlsx").reset_index(drop=True)
-val_df   = pd.read_excel("/src/dataset/val.xlsx").reset_index(drop=True)
+train_df = pd.read_excel("dataset/train.xlsx").reset_index(drop=True)
+val_df   = pd.read_excel("dataset/val.xlsx").reset_index(drop=True)
 
 train_dataset = Dataset.from_pandas(train_df, preserve_index=False)
 eval_dataset  = Dataset.from_pandas(val_df, preserve_index=False)
 
 # ===== Tokenizer =====
-tokenizer = LlamaTokenizer.from_pretrained("/src")
+tokenizer = LlamaTokenizer.from_pretrained("mesolitica/tinyllama-1.1b-4096-fpf")
 tokenizer.pad_token = tokenizer.eos_token
 
 def tokenize_function(examples):
@@ -80,12 +80,12 @@ tokenized_train = train_dataset.map(tokenize_function, batched=True, remove_colu
 tokenized_val   = eval_dataset.map(tokenize_function,   batched=True, remove_columns=["Prompt", "Response"])
 
 # ===== Model =====
-config = LlamaConfig.from_pretrained("/src")
+config = LlamaConfig.from_pretrained("mesolitica/tinyllama-1.1b-4096-fpf")
 model  = LlamaForCausalLM(config)
 model.resize_token_embeddings(tokenizer.vocab_size)
 
 # ===== Training =====
-output_dir = "/results"
+output_dir = "results"
 os.makedirs(output_dir, exist_ok=True)
 
 training_args = TrainingArguments(
