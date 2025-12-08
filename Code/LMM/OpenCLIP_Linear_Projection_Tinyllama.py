@@ -18,8 +18,8 @@ from transformers import (
 
 # ====== settings ======
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-vision_path = "laion"
-llm_path = "tinyllama-4096/results/checkpoint-5268"
+vision_path = "laion/CLIP-ViT-H-14-laion2B-s32B-b79K"
+llm_path = "configs/TinyLlama-1.1b"
 
 data_path = "dataset/train.jsonl"
 image_dir = "dataset/images"
@@ -71,8 +71,8 @@ class VLMFinetuneDataset(Dataset):
 
 # ====== Load：OpenCLIP + TinyLLaMA ======
 print("Loading models...")
-vision_encoder = CLIPVisionModel.from_pretrained(vision_path, local_files_only=True).to(device)
-processor      = CLIPImageProcessor.from_pretrained(vision_path, local_files_only=True)
+vision_encoder = CLIPVisionModel.from_pretrained(vision_path).to(device)
+processor      = CLIPImageProcessor.from_pretrained(vision_path)
 
 bnb_config = BitsAndBytesConfig(
     load_in_4bit=True,
@@ -219,4 +219,3 @@ for epoch in range(epochs):
         print("Saved best model")
 
     gc.collect(); torch.cuda.empty_cache()
-

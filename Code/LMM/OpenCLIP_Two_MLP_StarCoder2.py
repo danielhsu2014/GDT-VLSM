@@ -19,9 +19,9 @@ from peft import PeftModel
 
 # ====== settings ======
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-vision_path = "laion"
-llm_base_path = "starcode_7b/results/checkpoint-21090"
-llm_adapter_path = "epoch10"
+vision_path = "laion/CLIP-ViT-H-14-laion2B-s32B-b79K"
+llm_base_path = "bigcode/starcoder2-7b"
+llm_adapter_path = "configs/StarCoder2"
 data_path = "dataset/train.jsonl"
 image_dir = "dataset/images"
 save_dir = "./OpenCLIP_Two_MLP_StarCoder2"
@@ -71,8 +71,8 @@ class VLMFinetuneDataset(Dataset):
 
 # ====== Load：OpenCLIP + Starcoder2 ======
 print("Loading models...")
-vision_encoder = CLIPVisionModel.from_pretrained(vision_path, local_files_only=True).to(device)
-processor      = CLIPImageProcessor.from_pretrained(vision_path, local_files_only=True)
+vision_encoder = CLIPVisionModel.from_pretrained(vision_path).to(device)
+processor      = CLIPImageProcessor.from_pretrained(vision_path)
 
 bnb_config = BitsAndBytesConfig(
     load_in_4bit=True,
@@ -84,7 +84,6 @@ base_model = AutoModelForCausalLM.from_pretrained(
     llm_base_path,
     quantization_config=bnb_config,
     device_map={"": 0},
-    local_files_only=True,
 )
 llm = PeftModel.from_pretrained(base_model, llm_adapter_path, local_files_only=True).to(device)
 llm.eval()
