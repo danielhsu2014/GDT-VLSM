@@ -253,5 +253,5 @@ This repository is released under the MIT License (see `LICENSE`).
 
 ## Contact
 
-Contact information will be added after the CVPR 2026 review period to
+Contact information will be added after the review period to
 preserve anonymity.
