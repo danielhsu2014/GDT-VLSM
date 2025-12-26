@@ -1,10 +1,5 @@
 # Generative Digital Twins: Vision-Language Simulation Models for Executable Industrial Systems
 
-> **CVPR 2026 Submission (Anonymous)**  
-> This repository contains the training code, configuration files, and Docker
-> environments for the paper *“Generative Digital Twins: Vision-Language
-> Simulation Models for Executable Industrial Systems.”*
-
 The goal of this codebase is to reproduce the Vision-Language Simulation Models
 (VLSM) used for generating executable FlexScript from text and layout sketches.
 
@@ -235,7 +230,7 @@ You can adapt the same pattern to build and run the TinyLLaMA environment.
 
 ## Model Weights (to be released after review)
 
-To comply with the CVPR 2026 double-blind policy, model weights are **not**
+To comply with the double-blind policy, model weights are **not**
 included in this repository.
 
 After the review phase, we plan to release:
