@@ -1,5 +1,11 @@
 # Generative Digital Twins: Vision-Language Simulation Models for Executable Industrial Systems
 
+**Authors:**  
+YuChe Hsu, AnJui Wang, TsaiChing Ni, YuanFu Yang  
+
+Institute of Artificial Intelligence Innovation,  
+National Yang Ming Chiao Tung University
+
 <div align="center">
 
 [![Project Page](https://img.shields.io/badge/Project-Page-blue)](https://danielhsu2014.github.io/GDT-VLSM-project/)
