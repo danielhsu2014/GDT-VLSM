@@ -266,16 +266,16 @@ This repository is released under the MIT License (see LICENSE).
 
 ---
 
-## Model Usage Notice
+## Model and Dataset Usage Notice
 
-The models, model weights, checkpoints, and any generated outputs
-associated with this project are released for academic research
+The models, model weights, checkpoints, datasets, and any generated
+outputs associated with this project are released for academic research
 and educational purposes only.
 
-Commercial use, including but not limited to use in for-profit
-products, services, internal industrial deployment, or technology
-transfer, is strictly prohibited without prior written permission
-from the authors.
+Commercial use, including but not limited to use in for-profit products,
+services, internal industrial deployment, data redistribution for
+commercial purposes, or technology transfer, is strictly prohibited
+without prior written permission from the authors.
 
 Please contact the authors for commercial licensing inquiries.
 
