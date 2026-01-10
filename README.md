@@ -278,6 +278,6 @@ Please contact the authors for commercial licensing inquiries.
 ## Contact
 
 If you have any questions, feedback, or are interested in collaboration, feel free to reach out through the following channels:
-	•	🌐 Project Page: https://danielhsu2014.github.io/GDT-VLSM-project/
-	•	📧 Email: danielhsu.ii13@nycu.edu.tw
-	•	💼 LinkedIn: https://www.linkedin.com/in/yu-che-hsu-83048b316
+- 🌐 Project Page: https://danielhsu2014.github.io/GDT-VLSM-project/
+- 📧 Email: danielhsu.ii13@nycu.edu.tw
+- 💼 LinkedIn: https://www.linkedin.com/in/yu-che-hsu-83048b316
