@@ -12,7 +12,7 @@ National Yang Ming Chiao Tung University
 [![Paper](https://img.shields.io/badge/Paper-PDF-4a4a4a)](https://arxiv.org/pdf/2512.20387)
 [![arXiv](https://img.shields.io/badge/arXiv-2512.20387-b31b1b.svg)](https://arxiv.org/abs/2512.20387)
 [![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Paper-yellow)](https://huggingface.co/papers/2512.20387)
-[![Demo](https://img.shields.io/badge/Gradio-Demo-orange)](https://dangerous-thanksgiving-combination-court.trycloudflare.com/)
+[![Demo](https://img.shields.io/badge/Gradio-Demo-orange)](https://meaning-ben-bizrate-values.trycloudflare.com)
 
 </div>
 
